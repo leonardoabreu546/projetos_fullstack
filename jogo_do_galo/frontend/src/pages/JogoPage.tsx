@@ -40,16 +40,25 @@ function calculateWinner(squares: (string | null)[]): string | null {
   }
 
   return null;
-  
-}
+  }
 
+  function handleReset() {
+    setSquares(Array(9).fill(null));
+    setXIsNext(true);
+  }
 
+  const isDraw = !winner && squares.every((square) => square !== null);
 
   return (
     <div className="d-flex flex-column align-items-center">
       <h1 className="mb-4">Jogo do Galo</h1>
       <p className="fs-4">{status}</p>
       <Board squares={squares} onSquareClick={handleClick} />
+      {(winner || isDraw) && (
+        <button className="btn btn-primary mt-3" onClick={handleReset}>
+          Reiniciar Jogo
+        </button>
+      )}
     </div>
   );
 }
