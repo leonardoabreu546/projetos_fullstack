@@ -1,8 +1,10 @@
 import express from 'express';
 import cors from 'cors';
+import { conectarDB } from './database/index.js';
 
 const app = express();
 const PORT = 3333;
+conectarDB();
 
 // Middlewares
 app.use(cors());
