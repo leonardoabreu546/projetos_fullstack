@@ -4,7 +4,7 @@ import { conectarDB } from './database/index.js';
 
 const app = express();
 const PORT = 3333;
-conectarDB();
+const db = await conectarDB();
 
 // Middlewares
 app.use(cors());
