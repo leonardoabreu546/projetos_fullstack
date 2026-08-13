@@ -10,12 +10,26 @@ const db = await conectarDB();
 app.use(cors());
 app.use(express.json());
 
-// Rota de teste
-app.get('/api/teste', (req, res) => {
-  return res.json({ mensagem: 'API do Gestor de Tarefas a funcionar! 🚀' });
+app.post('/api/tarefas', async (req, res) => {
+  try {
+  const {descricao} = req.body;
+
+  if (!descricao) {
+    return res.status(400).json({ error: 'A descrição da tarefa é obrigatória.' });
+  }
+
+  const resultado = await db.run(
+    'INSERT INTO tarefas (descricao) VALUES (?)',
+    [descricao]
+  );
+
+  return res.status(201).json({ id: resultado.lastID, descricao, concluida: 0 });
+
+  } catch (error) {
+    return res.status(500).json({ error: 'Erro ao criar tarefa!' });
+  }
 });
 
-// Iniciar servidor
 app.listen(PORT, () => {
   console.log(`🔥 Servidor a rodar em http://localhost:${PORT}`);
 });

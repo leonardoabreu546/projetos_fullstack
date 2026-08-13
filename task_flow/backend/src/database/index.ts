@@ -10,7 +10,7 @@ export async function conectarDB() {
   await db.exec(`
     CREATE TABLE IF NOT EXISTS tarefas (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
-      titulo TEXT NOT NULL,
+      descricao TEXT NOT NULL,
       concluida INTEGER DEFAULT 0
     );
   `);
