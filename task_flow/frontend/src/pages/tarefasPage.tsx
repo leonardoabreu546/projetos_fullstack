@@ -1,7 +1,6 @@
 import { CriarTarefaForm } from '../components/criarTarefaForm';
 
 export function TarefasPage() {
-    
   async function handleCriarTarefa(descricao: string) {
     try {
       const resposta = await fetch('http://localhost:3333/api/tarefas', {
@@ -17,7 +16,10 @@ export function TarefasPage() {
         console.log('Tarefa criada com sucesso:', novaTarefa);
         alert('Tarefa criada com sucesso!');
       } else {
-        alert('Erro ao criar tarefa!');
+        const dadosErro = await resposta.json().catch(() => ({}));
+        console.log('Status do erro:', resposta.status);
+        console.log('Detalhes do erro:', dadosErro);
+        alert(`Erro ao criar tarefa! Status: ${resposta.status}`);
       }
     } catch (erro) {
       console.error('Erro de ligação ao servidor:', erro);
@@ -26,9 +28,18 @@ export function TarefasPage() {
   }
 
   return (
-    <div className="container mt-5">
-      <h1>Gestão de Tarefas</h1>
-      <CriarTarefaForm onCriarTarefa={handleCriarTarefa} />
+    <div className="container py-5" style={{ maxWidth: '650px' }}>
+      <div className="card shadow-sm border-0 my-3">
+        <div className="card-body p-4 p-md-5">
+          <h1 className="card-title text-center text-primary mb-4 fw-bold">
+            Gestão de Tarefas 📝
+          </h1>
+          
+          <div className="mt-4">
+            <CriarTarefaForm onCriarTarefa={handleCriarTarefa} />
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

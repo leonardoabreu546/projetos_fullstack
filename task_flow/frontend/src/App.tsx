@@ -1,13 +1,14 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { TarefasPage } from './pages/tarefasPage';
 
 export function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<div>Home Page</div>} />
+        <Route path="/" element={<TarefasPage />} />
       </Routes>
     </BrowserRouter>
   );
 }
 
-export default App;
+export default App; 
