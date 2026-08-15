@@ -30,6 +30,17 @@ app.post('/api/tarefas', async (req, res) => {
   }
 });
 
+app.get('/api/tarefas', async (req, res) => {
+  try {
+    const tarefas = await db.all('SELECT * FROM tarefas');
+    return res.status(200).json(tarefas);
+    
+  } catch (error) {
+    console.error('Erro ao buscar tarefas:', error);
+    return res.status(500).json({ error: 'Erro ao buscar tarefas!' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🔥 Servidor a rodar em http://localhost:${PORT}`);
 });
