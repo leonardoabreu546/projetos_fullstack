@@ -1,4 +1,4 @@
-interface Tarefa {
+export interface Tarefa {
     id: number;
     descricao: string;
     concluida: number;
@@ -24,4 +24,4 @@ export function ListaTarefas({ tarefas }: ListaTarefasProps) {
                 </ul>
             )}
         </div>
-    )};
+    )}
