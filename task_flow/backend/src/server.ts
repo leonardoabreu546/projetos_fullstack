@@ -34,10 +34,31 @@ app.get('/api/tarefas', async (req, res) => {
   try {
     const tarefas = await db.all('SELECT * FROM tarefas');
     return res.status(200).json(tarefas);
-    
+
   } catch (error) {
     console.error('Erro ao buscar tarefas:', error);
     return res.status(500).json({ error: 'Erro ao buscar tarefas!' });
+  }
+});
+
+app.put('/api/tarefas/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { concluida } = req.body;
+    const resultado = await db.run(
+      'UPDATE tarefas SET concluida = ? WHERE id = ?',
+      [concluida, id]
+    );
+
+    if (resultado.changes === 0) {
+      return res.status(404).json({ error: 'Tarefa não encontrada.' });
+    }
+
+    return res.status(200).json({ message: 'Tarefa atualizada com sucesso!' });
+
+  } catch (error) {
+    console.error('Erro ao atualizar tarefa:', error);
+    return res.status(500).json({ error: 'Erro ao atualizar tarefa!' });
   }
 });
 
