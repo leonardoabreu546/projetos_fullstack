@@ -50,6 +50,28 @@ export function TarefasPage() {
     }
   }
 
+  async function handleAlternarConcluida(id: number, statusAtual: number) {
+    try {
+      const novoStatus = statusAtual === 1 ? 0 : 1;
+      const resposta = await fetch(`http://localhost:3333/api/tarefas/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ concluida: novoStatus }),
+      });
+
+      if (resposta.ok) {
+        await carregarTarefas();
+      } else {
+        alert(`Erro ao atualizar tarefa! Status: ${resposta.status}`);
+      }
+
+    } catch (erro) {
+      console.error('Erro de ligação ao servidor:', erro);
+    }
+  } 
+
   useEffect(() => {
     carregarTarefas();
   }, []);
@@ -67,7 +89,7 @@ export function TarefasPage() {
           </div>
         </div>
       </div>
-      <ListaTarefas tarefas={tarefas} />
+      <ListaTarefas tarefas={tarefas} onAlternarConcluida={handleAlternarConcluida} />
     </div>
   );
 }
