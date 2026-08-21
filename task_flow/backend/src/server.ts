@@ -44,10 +44,10 @@ app.get('/api/tarefas', async (req, res) => {
 app.put('/api/tarefas/:id', async (req, res) => {
   try {
     const { id } = req.params;
-    const { concluida } = req.body;
+    const { concluida, descricao } = req.body;
     const resultado = await db.run(
-      'UPDATE tarefas SET concluida = ? WHERE id = ?',
-      [concluida, id]
+      'UPDATE tarefas SET concluida = ?, descricao = ? WHERE id = ?',
+      [concluida, descricao, id]
     );
 
     if (resultado.changes === 0) {
