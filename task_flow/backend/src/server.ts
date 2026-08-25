@@ -62,6 +62,22 @@ app.put('/api/tarefas/:id', async (req, res) => {
   }
 });
 
+app.delete('/api/tarefas/:id', async (req, res) => {
+  try {
+    const { id } = req.params;
+    const resultado = await db.run('DELETE FROM tarefas WHERE id = ?', [id]);
+
+    if (resultado.changes === 0) {
+      return res.status(404).json({error: 'Tarefa não encontrada.'});
+    }
+    return res.status(200).json({ message: 'Tarefa apagada com sucesso!' });
+    
+  } catch (error) {
+    console.error('Erro ao apagar tarefa:', error);
+    return res.status(500).json({ error: 'Erro ao apagar tarefa!' });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`🔥 Servidor a rodar em http://localhost:${PORT}`);
 });
