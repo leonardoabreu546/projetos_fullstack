@@ -91,6 +91,22 @@ export function TarefasPage() {
     }
   }
 
+  async function handleApagarTarefa(id: number) {
+    try {
+      const resposta = await fetch(`http://localhost:3333/api/tarefas/${id}`, {
+        method: 'DELETE',
+      });
+      if (resposta.ok) {
+        await carregarTarefas();
+        alert('Tarefa apagada com sucesso!');
+      } else {
+        alert(`Erro ao apagar tarefa! Status: ${resposta.status}`);
+      }
+    } catch (erro) {
+      console.error('Erro de ligação ao servidor:', erro);
+    }
+  }
+
   useEffect(() => {
     carregarTarefas();
   }, []);
@@ -112,6 +128,7 @@ export function TarefasPage() {
         tarefas={tarefas} 
         onAlternarConcluida={handleAlternarConcluida} 
         onEditarTarefa={handleEditarTarefa}
+        onApagarTarefa={handleApagarTarefa}
       />
     </div>
   );

@@ -10,9 +10,10 @@ interface ListaTarefasProps {
     tarefas: Tarefa[];
     onAlternarConcluida: (id: number, statusAtual: number) => void;
     onEditarTarefa: (id: number, novaDescricao: string, statusAtual: number) => void;
+    onApagarTarefa: (id: number) => void;
 }
 
-export function ListaTarefas({ tarefas, onAlternarConcluida, onEditarTarefa }: ListaTarefasProps) {
+export function ListaTarefas({ tarefas, onAlternarConcluida, onEditarTarefa, onApagarTarefa }: ListaTarefasProps) {
     const [idEditando, setIdEditando] = useState<number | null>(null);
     const [textoEditado, setTextoEditado] = useState('');
 
@@ -71,6 +72,12 @@ export function ListaTarefas({ tarefas, onAlternarConcluida, onEditarTarefa }: L
                                             onClick={() => onAlternarConcluida(tarefa.id, tarefa.concluida)}
                                         >
                                             {tarefa.concluida === 1 ? 'Desmarcar' : 'Marcar como Concluída'}
+                                        </button>
+                                        <button
+                                            className="btn btn-sm btn-outline-danger"
+                                            onClick={() => onApagarTarefa(tarefa.id)}
+                                        >
+                                            Apagar
                                         </button>
                                     </div>
                                 </div>
