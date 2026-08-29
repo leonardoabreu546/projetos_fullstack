@@ -1,42 +1,32 @@
 import { CriarTarefaForm } from '../components/criarTarefaForm';
 import { ListaTarefas, type Tarefa } from '../components/listaTarefas';
 import { useState, useEffect } from 'react';
+import { criarTarefaAPI, carregarTarefasAPI, alternarConcluidaAPI, editarTarefaAPI, apagarTarefaAPI } from '../services/tarefaService';
 
 export function TarefasPage() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
 
   async function handleCriarTarefa(descricao: string) {
-    try {
-      const resposta = await fetch('http://localhost:3333/api/tarefas', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ descricao }),
-      });
+  try {
+    // Chama o serviço para criar a tarefa
+    const novaTarefa = await criarTarefaAPI(descricao);
+    
+    console.log('Tarefa criada com sucesso:', novaTarefa);
+    await carregarTarefas();
+    alert('Tarefa criada com sucesso!');
 
-      if (resposta.ok) {
-        const novaTarefa = await resposta.json();
-        console.log('Tarefa criada com sucesso:', novaTarefa);
-        await carregarTarefas();
-        alert('Tarefa criada com sucesso!');
-      } else {
-        const dadosErro = await resposta.json().catch(() => ({}));
-        console.log('Status do erro:', resposta.status);
-        console.log('Detalhes do erro:', dadosErro);
-        alert(`Erro ao criar tarefa! Status: ${resposta.status}`);
-      }
-    } catch (erro) {
-      console.error('Erro de ligação ao servidor:', erro);
-      alert('Não foi possível conectar ao backend. O servidor está a rodar na porta 3333?');
-    }
-  } 
+  } catch (erro) {
+    // O throw do serviço faz o código saltar diretamente para aqui se algo falhar
+    console.error('Erro ao criar tarefa:', erro);
+    alert('Não foi possível criar a tarefa!');
+  }
+}
 
   async function carregarTarefas() {
     try {
-      const resposta = await fetch('http://localhost:3333/api/tarefas');
-      const dados = await resposta.json();
+      const dados = await carregarTarefasAPI();
       setTarefas(dados);
+
     } catch (erro) {
       console.error('Erro ao carregar tarefas:', erro);
     }
@@ -44,66 +34,49 @@ export function TarefasPage() {
 
   async function handleAlternarConcluida(id: number, statusAtual: number) {
     try {
+      // 1. Inverte o status (de 0 para 1 ou de 1 para 0)
       const novoStatus = statusAtual === 1 ? 0 : 1;
+
+      // 2. Procura a tarefa atual no estado local para reaproveitar a descrição
       const tarefaAtual = tarefas.find((t) => t.id === id);
+      const descricao = tarefaAtual ? tarefaAtual.descricao : '';
 
-      const resposta = await fetch(`http://localhost:3333/api/tarefas/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          concluida: novoStatus,
-          descricao: tarefaAtual ? tarefaAtual.descricao : ''
-        }),
-      });
+      // 3. Chama o serviço para atualizar na base de dados
+      await alternarConcluidaAPI(id, novoStatus, descricao);
 
-      if (resposta.ok) {
-        await carregarTarefas();
-      } else {
-        alert(`Erro ao atualizar tarefa! Status: ${resposta.status}`);
-      }
+      // 4. Se correu bem, recarrega a lista
+      await carregarTarefas();
+
     } catch (erro) {
-      console.error('Erro de ligação ao servidor:', erro);
+      // 5. Se o serviço der throw (resposta.ok for false) ou a rede falhar, cai aqui
+      console.error('Erro ao alternar status da tarefa:', erro);
+      alert('Não foi possível atualizar a tarefa.');
     }
-  } 
+  }
 
   async function handleEditarTarefa(id: number, novaDescricao: string, statusAtual: number) {
     try {
-      const resposta = await fetch(`http://localhost:3333/api/tarefas/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ 
-          descricao: novaDescricao, 
-          concluida: statusAtual 
-        }),
-      });
+      await editarTarefaAPI(id, novaDescricao, statusAtual);
+      await carregarTarefas();
+      alert('Tarefa editada com sucesso!');
 
-      if (resposta.ok) {
-        await carregarTarefas();
-      } else {
-        alert(`Erro ao atualizar tarefa! Status: ${resposta.status}`);
-      }
     } catch (erro) {
+      
       console.error('Erro de ligação ao servidor:', erro);
+      alert('Não foi possível editar a tarefa.');
     }
   }
 
   async function handleApagarTarefa(id: number) {
     try {
-      const resposta = await fetch(`http://localhost:3333/api/tarefas/${id}`, {
-        method: 'DELETE',
-      });
-      if (resposta.ok) {
+
+        await apagarTarefaAPI(id);
         await carregarTarefas();
         alert('Tarefa apagada com sucesso!');
-      } else {
-        alert(`Erro ao apagar tarefa! Status: ${resposta.status}`);
-      }
+
     } catch (erro) {
       console.error('Erro de ligação ao servidor:', erro);
+      alert('Não foi possível apagar a tarefa.');
     }
   }
 
