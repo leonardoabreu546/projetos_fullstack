@@ -5,6 +5,7 @@ import { criarTarefaAPI, carregarTarefasAPI, alternarConcluidaAPI, editarTarefaA
 
 export function TarefasPage() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
+  const [carregando, setCarregando] = useState(true);
 
   async function handleCriarTarefa(descricao: string) {
   try {
@@ -24,11 +25,14 @@ export function TarefasPage() {
 
   async function carregarTarefas() {
     try {
+      setCarregando(true);
       const dados = await carregarTarefasAPI();
       setTarefas(dados);
 
     } catch (erro) {
       console.error('Erro ao carregar tarefas:', erro);
+    } finally {
+      setCarregando(false);
     }
   }
 
@@ -85,6 +89,7 @@ export function TarefasPage() {
   }, []);
 
   return (
+
     <div className="container py-5" style={{ maxWidth: '650px' }}>
       <div className="card shadow-sm border-0 my-3">
         <div className="card-body p-4 p-md-5">
@@ -99,6 +104,7 @@ export function TarefasPage() {
       </div>
       <ListaTarefas 
         tarefas={tarefas} 
+        carregando={carregando}
         onAlternarConcluida={handleAlternarConcluida} 
         onEditarTarefa={handleEditarTarefa}
         onApagarTarefa={handleApagarTarefa}

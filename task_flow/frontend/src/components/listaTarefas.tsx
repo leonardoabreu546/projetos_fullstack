@@ -8,9 +8,10 @@ export interface Tarefa {
 
 interface ListaTarefasProps {
   tarefas: Tarefa[];
+  carregando: boolean;
   onAlternarConcluida: (id: number, statusAtual: number) => void;
   onEditarTarefa: (id: number, novaDescricao: string, statusAtual: number) => void;
-  onApagarTarefa: (id: number) => void;
+  onApagarTarefa: (id: number) => void; 
 }
 
 export function ListaTarefas({
@@ -18,7 +19,19 @@ export function ListaTarefas({
   onAlternarConcluida,
   onEditarTarefa,
   onApagarTarefa,
+  carregando
 }: ListaTarefasProps) {
+    if (carregando) {
+    return (
+      <div className="text-center my-4">
+        <div className="spinner-border text-primary" role="status">
+          <span className="visually-hidden">A carregar...</span>
+        </div>
+        <p className="mt-2 text-muted">A carregar tarefas...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="mt-4">
       <h2 className="fw-semibold mb-3">Lista de Tarefas</h2>
