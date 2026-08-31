@@ -73,6 +73,8 @@ export function TarefasPage() {
 
   async function handleApagarTarefa(id: number) {
     try {
+        const confirmado = window.confirm('Tem certeza que deseja apagar esta tarefa?');
+        if (!confirmado) return;
 
         await apagarTarefaAPI(id);
         await carregarTarefas();
