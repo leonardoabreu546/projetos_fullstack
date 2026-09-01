@@ -11,6 +11,7 @@ interface ItemTarefaProps {
 export function ItemTarefa({ tarefa, onAlternarConcluida, onEditarTarefa, onApagarTarefa }: ItemTarefaProps) {
     const [isEditando, setIsEditando] = useState(false);
     const [textoEditado, setTextoEditado] = useState(tarefa.descricao);
+    const [expandido, setExpandido] = useState(false);
 
     return (
         <li className="list-group-item">
@@ -42,7 +43,20 @@ export function ItemTarefa({ tarefa, onAlternarConcluida, onEditarTarefa, onApag
                 </div>
             ) : (
                 <div className="d-flex justify-content-between align-items-center">
-                    <span className="text-start me-3" style={{ whiteSpace: 'pre-line' }}>
+                    <span
+                        className="text-start me-3"
+                        style={
+                            expandido
+                                ? { whiteSpace: 'pre-line' }
+                                : {
+                                    whiteSpace: 'pre-line',
+                                    display: '-webkit-box',
+                                    WebkitLineClamp: 3,
+                                    WebkitBoxOrient: 'vertical',
+                                    overflow: 'hidden',
+                                }
+                        }
+                    >
                         {tarefa.descricao}
                     </span>
                     <div className="d-flex gap-2 text-nowrap">
@@ -67,6 +81,14 @@ export function ItemTarefa({ tarefa, onAlternarConcluida, onEditarTarefa, onApag
                         >
                             Apagar
                         </button>
+                        <button
+                            className="btn btn-sm btn-outline-info"
+                            onClick={() => setExpandido(!expandido)}
+                            
+                        >
+                            {expandido ? 'Encolher' : 'Expandir'}
+                        </button>
+
                     </div>
                 </div>
             )}
