@@ -24,7 +24,7 @@ export function ItemTarefa({ tarefa, onAlternarConcluida, onEditarTarefa, onApag
                         onChange={(e) => setTextoEditado(e.target.value)}
                     />
                     <button
-                        className="btn btn-success btn-sm"
+                        className="btn btn-success btn-sm me-2"
                         onClick={() => {
                             if (textoEditado.trim() !== '') {
                                 onEditarTarefa(tarefa.id, textoEditado, tarefa.concluida);
