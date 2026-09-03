@@ -6,6 +6,12 @@ import { criarTarefaAPI, carregarTarefasAPI, alternarConcluidaAPI, editarTarefaA
 export function TarefasPage() {
   const [tarefas, setTarefas] = useState<Tarefa[]>([]);
   const [carregando, setCarregando] = useState(true);
+  const [filtro, setFiltro] = useState<'todas' | 'pendentes' | 'concluidas'>('todas');
+  const tarefasFiltradas = tarefas.filter((tarefa) => {
+    if (filtro === 'pendentes') return tarefa.concluida === 0;
+    if (filtro === 'concluidas') return tarefa.concluida === 1;
+    return true; // se for 'todas', devolve tudo
+});
 
   async function handleCriarTarefa(descricao: string) {
   try {
@@ -104,8 +110,34 @@ export function TarefasPage() {
           </div>
         </div>
       </div>
+      <div className="btn-group mb-3 w-100" role="group">
+        <button
+            type="button"
+            className={`btn ${filtro === 'todas' ? 'btn-primary' : 'btn-outline-primary'}`}
+            onClick={() => setFiltro('todas')}
+        >
+            Todas
+        </button>
+        <button
+            type="button"
+            className={`btn ${filtro === 'pendentes' ? 'btn-primary' : 'btn-outline-primary'}`}
+            onClick={() => setFiltro('pendentes')}
+        >
+            Pendentes
+        </button>
+        <button
+            type="button"
+            className={`btn ${filtro === 'concluidas' ? 'btn-primary' : 'btn-outline-primary'}`}
+            onClick={() => setFiltro('concluidas')}
+        >
+            Concluídas
+        </button>
+    </div>
+
+    {/* Passas a lista filtrada para o componente */}
+
       <ListaTarefas 
-        tarefas={tarefas} 
+        tarefas={tarefasFiltradas} 
         carregando={carregando}
         onAlternarConcluida={handleAlternarConcluida} 
         onEditarTarefa={handleEditarTarefa}
