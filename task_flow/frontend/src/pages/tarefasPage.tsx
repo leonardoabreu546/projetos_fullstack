@@ -12,6 +12,9 @@ export function TarefasPage() {
     if (filtro === 'concluidas') return tarefa.concluida === 1;
     return true; // se for 'todas', devolve tudo
 });
+  const totalTodas = tarefas.length;
+  const totalPendentes = tarefas.filter((t) => t.concluida === 0).length;
+  const totalConcluidas = tarefas.filter((t) => t.concluida === 1).length;
 
   async function handleCriarTarefa(descricao: string) {
   try {
@@ -116,21 +119,21 @@ export function TarefasPage() {
             className={`btn ${filtro === 'todas' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => setFiltro('todas')}
         >
-            Todas
+            Todas ({totalTodas})
         </button>
         <button
             type="button"
             className={`btn ${filtro === 'pendentes' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => setFiltro('pendentes')}
         >
-            Pendentes
+            Pendentes ({totalPendentes})
         </button>
         <button
             type="button"
             className={`btn ${filtro === 'concluidas' ? 'btn-primary' : 'btn-outline-primary'}`}
             onClick={() => setFiltro('concluidas')}
         >
-            Concluídas
+            Concluídas ({totalConcluidas})
         </button>
     </div>
 
