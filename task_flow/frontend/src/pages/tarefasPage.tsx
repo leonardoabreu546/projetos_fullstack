@@ -11,7 +11,8 @@ export function TarefasPage() {
     if (filtro === 'pendentes') return tarefa.concluida === 0;
     if (filtro === 'concluidas') return tarefa.concluida === 1;
     return true; // se for 'todas', devolve tudo
-});
+  });
+  const tarefasOrdenadas = [...tarefasFiltradas].sort((a, b) => a.concluida - b.concluida);
   const totalTodas = tarefas.length;
   const totalPendentes = tarefas.filter((t) => t.concluida === 0).length;
   const totalConcluidas = tarefas.filter((t) => t.concluida === 1).length;
@@ -140,7 +141,7 @@ export function TarefasPage() {
     {/* Passas a lista filtrada para o componente */}
 
       <ListaTarefas 
-        tarefas={tarefasFiltradas} 
+        tarefas={tarefasOrdenadas} 
         carregando={carregando}
         onAlternarConcluida={handleAlternarConcluida} 
         onEditarTarefa={handleEditarTarefa}
